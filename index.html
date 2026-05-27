@@ -2,11 +2,13 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=1080, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Calendario</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Cormorant:wght@300;400&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
+
+:fullscreen body, :-webkit-full-screen body { width:100vw; height:100vh; overflow-y:auto; }
 
 :root {
   --bg:       #0e1420;
@@ -50,8 +52,9 @@ body {
   font-family: 'Cormorant Garamond', Georgia, serif;
   background: var(--bg);
   color: var(--text);
-  width: 1080px;
+  width: 100vw;
   min-height: 100vh;
+  overflow-x: hidden;
   transition: background .5s, color .5s;
   position: relative;
 }
@@ -829,16 +832,24 @@ async function fetchAllCalendars() {
   render();
 }
 
-// ── KEEP-ALIVE ────────────────────────────────────────────
+// ── KEEP-ALIVE + FULLSCREEN ───────────────────────────────
 let keepAliveStarted = false;
 
 function initKeepAlive() {
   if (keepAliveStarted) return;
   keepAliveStarted = true;
 
+  // Fullscreen — nasconde la navbar di Silk
+  try {
+    const el = document.documentElement;
+    if (el.requestFullscreen)             el.requestFullscreen();
+    else if (el.webkitRequestFullscreen)  el.webkitRequestFullscreen();
+  } catch(e) {}
+
+  // Audio silenzioso in loop — impedisce a Silk di chiudere la tab
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const buf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate); // 1 sec silence
+    const buf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
     const src = ctx.createBufferSource();
     src.buffer = buf;
     src.loop   = true;
