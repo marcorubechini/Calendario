@@ -757,6 +757,12 @@ function initGoogleAuth() {
       try { sessionStorage.setItem('gcal_token', accessToken); } catch(e) {}
       hideLoginOverlay();
       fetchAllCalendars();
+    },
+    error_callback: (err) => {
+      console.error('GIS error:', err);
+      if (err.type === 'popup_failed_to_open' || err.type === 'popup_closed') {
+        showPopupHelp();
+      }
     }
   });
 }
@@ -764,7 +770,19 @@ function initGoogleAuth() {
 function requestAuth() {
   if (!tokenClient) initGoogleAuth();
   if (!tokenClient) { console.warn('Google library not ready'); return; }
-  tokenClient.requestAccessToken({ prompt: '' });
+  tokenClient.requestAccessToken({ prompt: 'select_account' });
+}
+
+function showPopupHelp() {
+  const el = document.getElementById('loginOverlay');
+  if (!el) return;
+  const existing = el.querySelector('.popup-help');
+  if (existing) return;
+  const msg = document.createElement('div');
+  msg.className = 'popup-help login-overlay-sub';
+  msg.style.cssText = 'color:#c9854c;font-size:12px;text-align:center;max-width:380px;line-height:1.6;margin-top:8px;';
+  msg.textContent = 'Popup bloccato. In Silk: menu ≡ → Impostazioni → Blocco popup → disabilita per questo sito. Poi riprova.';
+  el.appendChild(msg);
 }
 
 function hideLoginOverlay() {
