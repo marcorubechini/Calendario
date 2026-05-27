@@ -307,10 +307,23 @@ body::after {
   width: 9px; height: 9px;
   border-radius: 50%;
 }
-.shift-mark.day   { background: var(--day-col); box-shadow: 0 0 6px var(--day-col); }
-.shift-mark.night { background: var(--ngt-col); box-shadow: 0 0 6px var(--ngt-col); }
+.shift-mark.day   { background: var(--day-col);   animation: pulse-day   2.2s ease-in-out infinite; }
+.shift-mark.night { background: var(--ngt-col);   animation: pulse-night 2.2s ease-in-out infinite; }
 .shift-mark.rest  { background: var(--rest-col); }
-.shift-mark.salto { background: var(--salto-col); box-shadow: 0 0 6px var(--salto-col); }
+.shift-mark.salto { background: var(--salto-col); animation: pulse-salto 2.2s ease-in-out infinite; }
+
+@keyframes pulse-day {
+  0%,100% { box-shadow: 0 0 5px var(--day-col);  transform: scale(1);   }
+  50%     { box-shadow: 0 0 18px var(--day-col), 0 0 32px var(--day-col); transform: scale(1.45); }
+}
+@keyframes pulse-night {
+  0%,100% { box-shadow: 0 0 5px var(--ngt-col);  transform: scale(1);   }
+  50%     { box-shadow: 0 0 18px var(--ngt-col), 0 0 32px var(--ngt-col); transform: scale(1.45); }
+}
+@keyframes pulse-salto {
+  0%,100% { box-shadow: 0 0 5px var(--salto-col); transform: scale(1);   }
+  50%     { box-shadow: 0 0 18px var(--salto-col), 0 0 32px var(--salto-col); transform: scale(1.45); }
+}
 
 .shift-lbl {
   font-size: 24px;
@@ -765,13 +778,15 @@ body::after {
 <script>
 // Google Identity Services — assign before GIS script fires
 // ── OAUTH REDIRECT HANDLER ───────────────────────────────
-// Runs immediately: check if returning from Google OAuth redirect
 (function() {
   const hash = new URLSearchParams(window.location.hash.slice(1));
   const token = hash.get('access_token');
+  const expiresIn = parseInt(hash.get('expires_in') || '3600', 10);
   if (token) {
-    try { sessionStorage.setItem('gcal_token', token); } catch(e) {}
-    // Clean the token from URL bar
+    try {
+      localStorage.setItem('gcal_token', token);
+      localStorage.setItem('gcal_token_exp', Date.now() + expiresIn * 1000);
+    } catch(e) {}
     try { history.replaceState(null, '', location.pathname); } catch(e) {}
   }
 })();
@@ -797,7 +812,12 @@ const CONFIG = {
 window.CALENDAR_EVENTS = {};  // { 'YYYY-MM-DD': [{t, n, c}, ...] }
 
 let accessToken = null;
-try { accessToken = sessionStorage.getItem('gcal_token'); } catch(e) {}
+try {
+  const t   = localStorage.getItem('gcal_token');
+  const exp = parseInt(localStorage.getItem('gcal_token_exp') || '0', 10);
+  if (t && Date.now() < exp) accessToken = t;
+  else { localStorage.removeItem('gcal_token'); localStorage.removeItem('gcal_token_exp'); }
+} catch(e) {}
 
 // ── GOOGLE AUTH ───────────────────────────────────────────
 function requestAuth() {
@@ -836,7 +856,7 @@ async function fetchCalendarEvents(calendarId, timeMin, timeMax) {
 
   if (res.status === 401) {
     accessToken = null;
-    try { sessionStorage.removeItem('gcal_token'); } catch(e) {}
+    try { localStorage.removeItem('gcal_token'); localStorage.removeItem('gcal_token_exp'); } catch(e) {}
     showLoginOverlay();
     return { items: [] };
   }
