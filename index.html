@@ -658,7 +658,7 @@ body::after {
 <div class="header">
   <div class="header-left">
     <div class="month-name" id="monthName">Mag<em>gio</em></div>
-    <div class="year-line" id="yearLine">2026 · Squadra A</div>
+    <div class="year-line" id="yearLine">2026</div>
   </div>
   <div class="header-right">
     <div class="today-shift-wrap">
@@ -704,7 +704,7 @@ body::after {
   <span class="leg-label">Calendario</span>
   <div class="leg-group">
     <div class="leg-item"><div class="leg-line" style="background:var(--fam)"></div> Famiglia</div>
-    <div class="leg-item"><div class="leg-line" style="background:var(--bam)"></div> Bambini</div>
+    <div class="leg-item"><div class="leg-line" style="background:var(--bam)"></div> Anna &amp; Dora</div>
     <div class="leg-item"><div class="leg-line" style="background:var(--per)"></div> Personale</div>
   </div>
 </div>
@@ -718,7 +718,7 @@ body::after {
   </div>
   <div class="ornament"><span>✦</span></div>
   <div class="detail-shift-section">
-    <div class="detail-shift-heading">Turno · Squadra A</div>
+    <div class="detail-shift-heading">Turno</div>
     <div class="detail-shift-val rest" id="dShiftVal">Riposo</div>
     <div class="detail-shift-h" id="dShiftH">—</div>
   </div>
@@ -1027,7 +1027,7 @@ function render(){
   document.getElementById('monthName').innerHTML =
     mn.substring(0,3)+'<em>'+mn.substring(3)+'</em>';
   document.getElementById('yearLine').textContent =
-    `${refDate.getFullYear()} · Squadra A`;
+    `${refDate.getFullYear()}`;
 
   // Today shift in header
   const ts  = getShift(getToday());
@@ -1081,7 +1081,7 @@ function openDetail(ts){
       <div class="detail-ev-info">
         <div class="detail-ev-name">${escapeHTML(e.n)}</div>
         <div class="detail-ev-meta">${e.t}</div>
-        <div class="detail-ev-cat">${e.c==='fam'?'Famiglia':e.c==='bam'?'Bambini':'Personale'}</div>
+        <div class="detail-ev-cat">${e.c==='fam'?'Famiglia':e.c==='bam'?'Anna &amp; Dora':'Personale'}</div>
       </div>
     </div>`).join('')
     : `<div class="no-ev-detail">Nessun appuntamento</div>`;
@@ -1135,10 +1135,10 @@ if (accessToken) {
   showLoginOverlay();
 }
 render();
-// Auto-refresh Google Calendar every 15 minutes
+// Auto-refresh Google Calendar ogni minuto
 setInterval(() => {
   if (accessToken) fetchAllCalendars();
-}, 15 * 60 * 1000);
+}, 60 * 1000);
 
 // Keep-alive for Echo Show 15 Silk browser
 document.addEventListener('touchstart', initKeepAlive, { once: true });
