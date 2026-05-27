@@ -109,7 +109,7 @@ body::after {
 }
 
 .year-line {
-  font-size: 13px;
+  font-size: 18px;
   letter-spacing: 0.28em;
   color: var(--text3);
   margin-top: 6px;
@@ -131,7 +131,7 @@ body::after {
 }
 
 .today-shift-label {
-  font-size: 10px;
+  font-size: 14px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--text3);
@@ -139,7 +139,7 @@ body::after {
 }
 
 .today-shift-val {
-  font-size: 16px;
+  font-size: 22px;
   font-weight: 400;
   letter-spacing: 0.12em;
   margin-top: 2px;
@@ -150,7 +150,7 @@ body::after {
 .today-shift-val.salto { color: var(--salto-col); }
 
 .today-shift-hours {
-  font-size: 11px;
+  font-size: 15px;
   color: var(--text3);
   letter-spacing: 0.1em;
   font-family: 'Cormorant Garamond', serif;
@@ -182,7 +182,7 @@ body::after {
 }
 .vtab {
   padding: 6px 16px;
-  font-size: 11px;
+  font-size: 15px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--text3);
@@ -205,7 +205,7 @@ body::after {
 }
 
 .week-range {
-  font-size: 11px;
+  font-size: 17px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--text3);
@@ -272,7 +272,7 @@ body::after {
 }
 
 .day-name-lbl {
-  font-size: 9px;
+  font-size: 16px;
   letter-spacing: 0.25em;
   text-transform: uppercase;
   color: var(--text3);
@@ -280,7 +280,7 @@ body::after {
 }
 
 .day-num {
-  font-size: 34px;
+  font-size: 56px;
   font-weight: 300;
   font-family: 'Cormorant Garamond', serif;
   line-height: 1;
@@ -302,7 +302,7 @@ body::after {
 }
 
 .shift-mark {
-  width: 5px; height: 5px;
+  width: 9px; height: 9px;
   border-radius: 50%;
 }
 .shift-mark.day   { background: var(--day-col); box-shadow: 0 0 6px var(--day-col); }
@@ -311,7 +311,7 @@ body::after {
 .shift-mark.salto { background: var(--salto-col); box-shadow: 0 0 6px var(--salto-col); }
 
 .shift-lbl {
-  font-size: 9px;
+  font-size: 16px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   font-family: 'Cormorant Garamond', serif;
@@ -322,7 +322,7 @@ body::after {
 .shift-lbl.salto { color: var(--salto-col); }
 
 .shift-time-lbl {
-  font-size: 9px;
+  font-size: 14px;
   color: var(--text3);
   letter-spacing: 0.1em;
   font-family: 'Cormorant Garamond', serif;
@@ -342,7 +342,7 @@ body::after {
 }
 
 .event-line {
-  width: 20px; height: 1px;
+  width: 28px; height: 2px;
   flex-shrink:0;
 }
 .event-line.fam  { background: var(--fam); }
@@ -350,16 +350,16 @@ body::after {
 .event-line.per  { background: var(--per); }
 
 .event-time-s {
-  font-size: 10px;
+  font-size: 15px;
   color: var(--text3);
   letter-spacing: 0.08em;
   font-family: 'Cormorant Garamond', serif;
-  width: 34px;
+  width: 48px;
   flex-shrink:0;
 }
 
 .event-title-s {
-  font-size: 13px;
+  font-size: 20px;
   font-weight: 400;
   color: var(--text2);
   font-family: 'Cormorant Garamond', serif;
@@ -368,7 +368,7 @@ body::after {
 }
 
 .no-ev {
-  font-size: 11px;
+  font-size: 17px;
   color: var(--text3);
   font-family: 'Cormorant Garamond', serif;
   font-style: italic;
@@ -395,8 +395,11 @@ body::after {
 }
 
 /* compact 2w */
-.week-grid.two-week .day-num { font-size:26px; }
-.week-grid.two-week .event-title-s { font-size:12px; }
+.week-grid.two-week .day-num { font-size:40px; }
+.week-grid.two-week .day-name-lbl { font-size:13px; }
+.week-grid.two-week .shift-lbl { font-size:13px; }
+.week-grid.two-week .event-title-s { font-size:17px; }
+.week-grid.two-week .event-time-s { font-size:13px; }
 
 /* ── LEGEND ── */
 .legend {
@@ -413,19 +416,19 @@ body::after {
 .leg-group { display:flex; align-items:center; gap:16px; }
 
 .leg-label {
-  font-size:9px; letter-spacing:0.25em; text-transform:uppercase;
+  font-size:14px; letter-spacing:0.25em; text-transform:uppercase;
   color:var(--text3); font-family:'Cormorant Garamond', serif;
 }
 
 .leg-item {
-  display:flex; align-items:center; gap:6px;
-  font-size:11px; color:var(--text2);
+  display:flex; align-items:center; gap:8px;
+  font-size:16px; color:var(--text2);
   font-family:'Cormorant Garamond', serif;
   letter-spacing:0.05em;
 }
 
-.leg-dot { width:5px; height:5px; border-radius:50%; }
-.leg-line { width:16px; height:1px; }
+.leg-dot { width:8px; height:8px; border-radius:50%; }
+.leg-line { width:22px; height:2px; }
 
 /* ── DETAIL PANEL ── */
 .overlay {
@@ -670,6 +673,7 @@ body::after {
         <button class="vtab" onclick="setView('day')">Giorno</button>
       </div>
       <button class="ctrl-btn" onclick="toggleTheme()" id="themeBtn">☀</button>
+      <button class="ctrl-btn" onclick="goFullscreen()" id="fsBtn" title="Schermo intero">⛶</button>
     </div>
   </div>
 </div>
@@ -843,13 +847,6 @@ let keepAliveStarted = false;
 function initKeepAlive() {
   if (keepAliveStarted) return;
   keepAliveStarted = true;
-
-  // Fullscreen — nasconde la navbar di Silk
-  try {
-    const el = document.documentElement;
-    if (el.requestFullscreen)             el.requestFullscreen();
-    else if (el.webkitRequestFullscreen)  el.webkitRequestFullscreen();
-  } catch(e) {}
 
   // Audio silenzioso in loop — impedisce a Silk di chiudere la tab
   try {
@@ -1096,6 +1093,15 @@ function toggleTheme(){
   dark=!dark;
   localStorage.setItem('theme', dark ? 'dark' : 'light');
   applyTheme();
+}
+
+function goFullscreen(){
+  const el = document.documentElement;
+  try {
+    if (el.requestFullscreen)            el.requestFullscreen();
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    else if (el.mozRequestFullScreen)    el.mozRequestFullScreen();
+  } catch(e) {}
 }
 
 // ── INIT ─────────────────────────────────────────────────
