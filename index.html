@@ -55,8 +55,11 @@ body {
   background: var(--bg);
   color: var(--text);
   width: 1080px;
-  min-height: 100vh;
+  height: 100vh;
   overflow-x: hidden;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
   transition: background .5s, color .5s;
   position: relative;
 }
@@ -233,6 +236,8 @@ body::after {
   padding: 0 40px;
   display:flex;
   flex-direction:column;
+  flex: 1;
+  min-height: 0;
 }
 
 /* gold ornament between rows */
@@ -242,8 +247,9 @@ body::after {
   border-bottom: 1px solid var(--border);
   cursor: pointer;
   transition: background .2s;
+  flex: 1;
+  min-height: 0;
   position:relative;
-  overflow: hidden;
 }
 
 .day-row:first-child { border-top: 1px solid var(--border); }
@@ -395,6 +401,7 @@ body::after {
 }
 
 /* compact 2w */
+.week-grid.two-week .day-row { flex: 1; min-height: 0; }
 .week-grid.two-week .day-num { font-size:26px; }
 .week-grid.two-week .event-title-s { font-size:12px; }
 
@@ -1017,26 +1024,6 @@ function render(){
   tv.className=`today-shift-val ${tsc}`;
   tv.textContent=shiftLabel(ts);
   document.getElementById('todayShiftHours').textContent=shiftHours(ts)||'—';
-  fillHeight();
-}
-
-// ── FILL HEIGHT ───────────────────────────────────────────
-function fillHeight() {
-  const rows     = document.querySelectorAll('.day-row');
-  if (!rows.length) return;
-  const header   = document.querySelector('.header');
-  const weekNav  = document.querySelector('.week-nav');
-  const legend   = document.querySelector('.legend');
-  const dividers = document.querySelectorAll('.week-divider');
-
-  const used =
-    (header  ? header.offsetHeight  : 0) +
-    (weekNav ? weekNav.offsetHeight : 0) +
-    (legend  ? legend.offsetHeight  : 0) +
-    Array.from(dividers).reduce((s, d) => s + d.offsetHeight, 0);
-
-  const rowH = Math.max(60, Math.floor((window.innerHeight - used) / rows.length));
-  rows.forEach(r => { r.style.height = rowH + 'px'; });
 }
 
 // ── DETAIL ────────────────────────────────────────────────
@@ -1115,8 +1102,6 @@ setInterval(() => {
 // Keep-alive for Echo Show 15 Silk browser
 document.addEventListener('touchstart', initKeepAlive, { once: true });
 document.addEventListener('click',      initKeepAlive, { once: true });
-
-window.addEventListener('resize', fillHeight);
 </script>
 </body>
 </html>
