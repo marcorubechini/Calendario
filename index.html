@@ -32,6 +32,7 @@ html { overflow-x: hidden; background: #0e1420; height: 100%; }
   --fam:      #6a9ad0;
   --bam:      #7ab87a;
   --per:      #c9a84c;
+  --con:      #c4878d;
 }
 
 .light {
@@ -48,6 +49,7 @@ html { overflow-x: hidden; background: #0e1420; height: 100%; }
   --text2:    #6a5a3a;
   --text3:    #9a8a6a;
   --rest-col: #c8c4b4;
+  --con:      #a8565c;
 }
 
 body {
@@ -348,6 +350,7 @@ body::after {
 .event-line.fam  { background: var(--fam); }
 .event-line.bam  { background: var(--bam); }
 .event-line.per  { background: var(--per); }
+.event-line.con  { background: var(--con); }
 
 .event-time-s {
   font-size: 26px;
@@ -541,6 +544,7 @@ body::after {
 .detail-ev-bar.fam { background:var(--fam); }
 .detail-ev-bar.bam { background:var(--bam); }
 .detail-ev-bar.per { background:var(--per); }
+.detail-ev-bar.con { background:var(--con); }
 
 .detail-ev-info {}
 .detail-ev-name {
@@ -706,6 +710,7 @@ body::after {
     <div class="leg-item"><div class="leg-line" style="background:var(--fam)"></div> Famiglia</div>
     <div class="leg-item"><div class="leg-line" style="background:var(--bam)"></div> Anna &amp; Dora</div>
     <div class="leg-item"><div class="leg-line" style="background:var(--per)"></div> Personale</div>
+    <div class="leg-item"><div class="leg-line" style="background:var(--con)"></div> Contatto</div>
   </div>
 </div>
 
@@ -751,11 +756,13 @@ const CONFIG = {
     famiglia:  'd75af63d3963d801b5df8c0c5720581769d5f4c3f7fb614627ad3a67bf923f4c@group.calendar.google.com',
     bambini:   'fa5ebaf2791a9f0a9cf0ea3de05aad626abc18c9e9b7ce8a88795bde98483847@group.calendar.google.com',
     personale: 'primary',
+    contatto:  'YOUR_CONTATTO_CALENDAR_ID',
   },
   COLORS: {
     famiglia:  '#6a9ad0',
     bambini:   '#7ab87a',
     personale: '#c9a84c',
+    contatto:  '#c4878d',
   }
 };
 
@@ -1082,7 +1089,7 @@ function openDetail(ts){
       <div class="detail-ev-info">
         <div class="detail-ev-name">${escapeHTML(e.n)}</div>
         <div class="detail-ev-meta">${e.t}</div>
-        <div class="detail-ev-cat">${e.c==='fam'?'Famiglia':e.c==='bam'?'Anna &amp; Dora':'Personale'}</div>
+        <div class="detail-ev-cat">${e.c==='fam'?'Famiglia':e.c==='bam'?'Anna &amp; Dora':e.c==='con'?'Contatto':'Personale'}</div>
       </div>
     </div>`).join('')
     : `<div class="no-ev-detail">Nessun appuntamento</div>`;
