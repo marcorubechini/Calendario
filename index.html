@@ -443,15 +443,15 @@ body::after {
 
 .detail {
   position:fixed; right:0; top:0; bottom:0;
-  width:360px;
+  width:620px;
   background: var(--bg2);
   border-left: 1px solid var(--border2);
-  padding: 48px 36px 40px;
+  padding: 56px 52px 48px;
   transform: translateX(100%);
   transition: transform .4s cubic-bezier(.4,0,.2,1);
   z-index:201;
   overflow-y:auto;
-  display:flex; flex-direction:column; gap:28px;
+  display:flex; flex-direction:column; gap:32px;
 }
 
 /* gold rule left edge detail */
@@ -464,27 +464,27 @@ body::after {
 .detail.open { transform:translateX(0); }
 
 .detail-close {
-  position:absolute; top:20px; right:20px;
-  width:30px; height:30px;
+  position:absolute; top:24px; right:24px;
+  width:56px; height:56px;
   border-radius:50%;
   border: 1px solid var(--border2);
   background:none; color:var(--text3);
-  cursor:pointer; font-size:13px;
+  cursor:pointer; font-size:24px;
   display:flex; align-items:center; justify-content:center;
   transition: all .2s;
 }
 .detail-close:hover { border-color:var(--gold-dim); color:var(--gold); }
 
 .detail-date {
-  font-size:64px; font-weight:300;
+  font-size:110px; font-weight:300;
   font-family:'Cormorant Garamond',serif;
   line-height:1; color:var(--text);
 }
 
 .detail-weekday {
-  font-size:10px; letter-spacing:0.28em; text-transform:uppercase;
+  font-size:22px; letter-spacing:0.28em; text-transform:uppercase;
   color:var(--text3); font-family:'Cormorant Garamond',serif;
-  margin-top:6px;
+  margin-top:8px;
 }
 
 /* ornament line */
@@ -503,13 +503,13 @@ body::after {
 .detail-shift-section {}
 
 .detail-shift-heading {
-  font-size:9px; letter-spacing:0.25em; text-transform:uppercase;
+  font-size:18px; letter-spacing:0.25em; text-transform:uppercase;
   color:var(--text3); font-family:'Cormorant Garamond',serif;
-  margin-bottom:8px;
+  margin-bottom:10px;
 }
 
 .detail-shift-val {
-  font-size:22px; font-weight:300; letter-spacing:0.1em;
+  font-size:44px; font-weight:300; letter-spacing:0.1em;
   font-family:'Cormorant Garamond',serif;
 }
 .detail-shift-val.day   { color:var(--day-col); }
@@ -518,25 +518,25 @@ body::after {
 .detail-shift-val.salto { color:var(--salto-col); }
 
 .detail-shift-h {
-  font-size:12px; color:var(--text3); letter-spacing:0.1em;
-  font-family:'Cormorant Garamond',serif; margin-top:3px;
+  font-size:22px; color:var(--text3); letter-spacing:0.1em;
+  font-family:'Cormorant Garamond',serif; margin-top:6px;
 }
 
 .detail-ev-heading {
-  font-size:9px; letter-spacing:0.25em; text-transform:uppercase;
+  font-size:18px; letter-spacing:0.25em; text-transform:uppercase;
   color:var(--text3); font-family:'Cormorant Garamond',serif;
-  margin-bottom:12px;
+  margin-bottom:16px;
 }
 
 .detail-ev-card {
-  padding:14px 0;
+  padding:20px 0;
   border-bottom:1px solid var(--border);
-  display:flex; gap:14px; align-items:flex-start;
+  display:flex; gap:20px; align-items:flex-start;
 }
 .detail-ev-card:last-child { border-bottom:none; }
 
 .detail-ev-bar {
-  width:1px; flex-shrink:0; align-self:stretch; min-height:30px;
+  width:3px; flex-shrink:0; align-self:stretch; min-height:40px;
 }
 .detail-ev-bar.fam { background:var(--fam); }
 .detail-ev-bar.bam { background:var(--bam); }
@@ -544,22 +544,22 @@ body::after {
 
 .detail-ev-info {}
 .detail-ev-name {
-  font-size:16px; font-weight:400; font-style:italic;
+  font-size:34px; font-weight:400; font-style:italic;
   font-family:'Cormorant Garamond',serif; color:var(--text);
   line-height:1.2;
 }
 .detail-ev-meta {
-  font-size:11px; color:var(--text3); letter-spacing:0.1em;
-  font-family:'Cormorant Garamond',serif; margin-top:4px;
+  font-size:22px; color:var(--text3); letter-spacing:0.1em;
+  font-family:'Cormorant Garamond',serif; margin-top:6px;
 }
 .detail-ev-cat {
-  font-size:9px; letter-spacing:0.18em; text-transform:uppercase;
-  margin-top:5px; color:var(--text3); font-family:'Cormorant Garamond',serif;
+  font-size:18px; letter-spacing:0.18em; text-transform:uppercase;
+  margin-top:6px; color:var(--text3); font-family:'Cormorant Garamond',serif;
 }
 
 .no-ev-detail {
-  font-size:14px; color:var(--text3); font-style:italic;
-  text-align:center; padding:16px 0;
+  font-size:28px; color:var(--text3); font-style:italic;
+  text-align:center; padding:20px 0;
   font-family:'Cormorant Garamond',serif;
 }
 
