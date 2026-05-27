@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Calendario</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Cormorant:wght@300;400&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { overflow-x: hidden; background: #0e1420; height: 100%; }
+
+:root {
+  --bg:       #0e1420;
+  --bg2:      #0a0f1a;
+  --surface:  #131b2e;
+  --surface2: #1a2540;
+  --border:   rgba(185,155,90,0.12);
+  --border2:  rgba(185,155,90,0.22);
+  --gold:     #c9a84c;
+  --gold2:    #e8c97a;
+  --gold-dim: rgba(201,168,76,0.35);
+  --text:     #f0ece0;
+  --text2:    #a89d80;
+  --text3:    #6a6450;
+  --day-col:  #c9854c;
+  --ngt-col:  #5a7fa8;
+  --rest-col: #2a3550;
+  --salto-col:#9a6a9a;
+  --fam:      #6a9ad0;
+  --bam:      #7ab87a;
+  --per:      #c9a84c;
+}
+
+.light {
+  --bg:       #f4f0e4;
+  --bg2:      #ede8d8;
+  --surface:  #ffffff;
+  --surface2: #f8f5ec;
+  --border:   rgba(140,110,50,0.12);
+  --border2:  rgba(140,110,50,0.25);
+  --gold:     #8c6e30;
+  --gold2:    #b08840;
+  --gold-dim: rgba(140,110,50,0.2);
+  --text:     #1a1810;
+  --text2:    #6a5a3a;
+  --text3:    #9a8a6a;
+  --rest-col: #c8c4b4;
+}
+
+body {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  background: var(--bg);
+  color: var(--text);
+  width: 1080px;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .5s, color .5s;
+  position: relative;
+}
+
+/* grain overlay */
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: .03;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* thin gold rule top */
+body::after {
+  content:'';
+  position:fixed; top:0; left:0; right:0;
+  height:2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  z-index:10;
+}
+
+/* ── HEADER ── */
+.header {
+  position: relative;
+  z-index:1;
+  padding: 40px 48px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.header-left {}
+
+.month-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 52px;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  color: var(--text);
+}
+
+.month-name em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.year-line {
+  font-size: 13px;
+  letter-spacing: 0.28em;
+  color: var(--text3);
+  margin-top: 6px;
+  font-weight: 400;
+  font-family: 'Cormorant Garamond', serif;
+  text-transform: uppercase;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-bottom: 6px;
+}
+
+/* Today shift — subtle */
+.today-shift-wrap {
+  text-align: right;
+}
+
+.today-shift-label {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text3);
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.today-shift-val {
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  margin-top: 2px;
+}
+.today-shift-val.day   { color: var(--day-col); }
+.today-shift-val.night { color: var(--ngt-col); }
+.today-shift-val.rest  { color: var(--text3); }
+.today-shift-val.salto { color: var(--salto-col); }
+
+.today-shift-hours {
+  font-size: 11px;
+  color: var(--text3);
+  letter-spacing: 0.1em;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+/* Controls */
+.controls { display:flex; align-items:center; gap:10px; }
+
+.ctrl-btn {
+  background: none;
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  display:flex; align-items:center; justify-content:center;
+  transition: all .25s;
+  font-family: inherit;
+}
+.ctrl-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+.view-tabs {
+  display:flex;
+  gap:0;
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  overflow:hidden;
+}
+.vtab {
+  padding: 6px 16px;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text3);
+  cursor:pointer;
+  transition: all .25s;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 500;
+  background: none;
+  border: none;
+}
+.vtab.active { background: var(--gold-dim); color: var(--gold2); }
+.vtab:hover:not(.active) { color: var(--text2); }
+
+/* ── WEEK NAV ── */
+.week-nav {
+  position:relative; z-index:1;
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 14px 48px 10px;
+  flex-shrink: 0;
+}
+
+.week-range {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text3);
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.nav-arrows { display:flex; gap:6px; }
+.nav-btn {
+  background:none;
+  border: 1px solid var(--border);
+  color: var(--text3);
+  width:28px; height:28px;
+  border-radius:50%;
+  cursor:pointer;
+  font-size:13px;
+  display:flex; align-items:center; justify-content:center;
+  transition: all .2s;
+  font-family:inherit;
+}
+.nav-btn:hover { border-color:var(--gold-dim); color:var(--gold); }
+
+/* ── GRID ── */
+.week-grid {
+  position:relative; z-index:1;
+  padding: 0 40px;
+  display:flex;
+  flex-direction:column;
+}
+
+/* gold ornament between rows */
+.day-row {
+  display: grid;
+  grid-template-columns: 80px 110px 1fr;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background .2s;
+  position:relative;
+  overflow: hidden;
+}
+
+.day-row:first-child { border-top: 1px solid var(--border); }
+
+.day-row::after {
+  content:'';
+  position:absolute; left:0; bottom:-1px; right:0;
+  height:1px;
+  background: linear-gradient(90deg, transparent 0%, var(--border2) 30%, transparent 100%);
+  opacity:0;
+  transition: opacity .2s;
+}
+
+.day-row:hover { background: rgba(201,168,76,0.03); }
+.day-row:hover::after { opacity:1; }
+
+.day-row.today { background: rgba(201,168,76,0.05); }
+.day-row.today .day-num { color: var(--gold2); }
+
+/* Day number col */
+.day-num-col {
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding: 16px 0;
+  border-right: 1px solid var(--border);
+}
+
+.day-name-lbl {
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text3);
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.day-num {
+  font-size: 34px;
+  font-weight: 300;
+  font-family: 'Cormorant Garamond', serif;
+  line-height: 1;
+  color: var(--text2);
+  margin-top: 3px;
+}
+
+.day-row.today .day-name-lbl { color: var(--gold); }
+.day-row.sunday .day-name-lbl,
+.day-row.sunday .day-num { color: #c47070; opacity:.75; }
+
+/* Shift col */
+.shift-col {
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding: 12px 10px;
+  gap: 5px;
+  border-right: 1px solid var(--border);
+}
+
+.shift-mark {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+}
+.shift-mark.day   { background: var(--day-col); box-shadow: 0 0 6px var(--day-col); }
+.shift-mark.night { background: var(--ngt-col); box-shadow: 0 0 6px var(--ngt-col); }
+.shift-mark.rest  { background: var(--rest-col); }
+.shift-mark.salto { background: var(--salto-col); box-shadow: 0 0 6px var(--salto-col); }
+
+.shift-lbl {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-family: 'Cormorant Garamond', serif;
+}
+.shift-lbl.day   { color: var(--day-col); }
+.shift-lbl.night { color: var(--ngt-col); }
+.shift-lbl.rest  { color: var(--text3); }
+.shift-lbl.salto { color: var(--salto-col); }
+
+.shift-time-lbl {
+  font-size: 9px;
+  color: var(--text3);
+  letter-spacing: 0.1em;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+/* Events col */
+.events-col {
+  padding: 14px 20px;
+  display:flex; flex-direction:column;
+  justify-content:center;
+  gap: 6px;
+}
+
+.event-row {
+  display:flex; align-items:center;
+  gap: 10px;
+}
+
+.event-line {
+  width: 20px; height: 1px;
+  flex-shrink:0;
+}
+.event-line.fam  { background: var(--fam); }
+.event-line.bam  { background: var(--bam); }
+.event-line.per  { background: var(--per); }
+
+.event-time-s {
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 0.08em;
+  font-family: 'Cormorant Garamond', serif;
+  width: 34px;
+  flex-shrink:0;
+}
+
+.event-title-s {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text2);
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
+.no-ev {
+  font-size: 11px;
+  color: var(--text3);
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  letter-spacing: 0.05em;
+}
+
+/* week 2 divider */
+.week-divider {
+  height: 28px;
+  flex-shrink: 0;
+  display:flex; align-items:center;
+  gap:14px;
+  padding: 0 2px;
+}
+.week-divider::before, .week-divider::after {
+  content:'';
+  flex:1; height:1px;
+  background: linear-gradient(90deg, transparent, var(--border2), transparent);
+}
+.week-divider span {
+  font-size:9px; letter-spacing:0.28em; text-transform:uppercase;
+  color: var(--text3); font-family:'Cormorant Garamond', serif;
+  white-space:nowrap;
+}
+
+/* compact 2w */
+.week-grid.two-week .day-num { font-size:26px; }
+.week-grid.two-week .event-title-s { font-size:12px; }
+
+/* ── LEGEND ── */
+.legend {
+  position:relative; z-index:1;
+  display:flex; align-items:center; gap:24px;
+  padding: 16px 48px 20px;
+  border-top: 1px solid var(--border);
+  flex-wrap:wrap;
+  flex-shrink: 0;
+}
+
+.leg-sep { width:1px; height:12px; background:var(--border2); }
+
+.leg-group { display:flex; align-items:center; gap:16px; }
+
+.leg-label {
+  font-size:9px; letter-spacing:0.25em; text-transform:uppercase;
+  color:var(--text3); font-family:'Cormorant Garamond', serif;
+}
+
+.leg-item {
+  display:flex; align-items:center; gap:6px;
+  font-size:11px; color:var(--text2);
+  font-family:'Cormorant Garamond', serif;
+  letter-spacing:0.05em;
+}
+
+.leg-dot { width:5px; height:5px; border-radius:50%; }
+.leg-line { width:16px; height:1px; }
+
+/* ── DETAIL PANEL ── */
+.overlay {
+  position:fixed; inset:0;
+  background: rgba(10,16,10,0.65);
+  backdrop-filter: blur(6px);
+  z-index:200;
+  opacity:0; pointer-events:none;
+  transition: opacity .35s;
+}
+.overlay.open { opacity:1; pointer-events:all; }
+
+.detail {
+  position:fixed; right:0; top:0; bottom:0;
+  width:360px;
+  background: var(--bg2);
+  border-left: 1px solid var(--border2);
+  padding: 48px 36px 40px;
+  transform: translateX(100%);
+  transition: transform .4s cubic-bezier(.4,0,.2,1);
+  z-index:201;
+  overflow-y:auto;
+  display:flex; flex-direction:column; gap:28px;
+}
+
+/* gold rule left edge detail */
+.detail::before {
+  content:'';
+  position:absolute; left:0; top:60px; bottom:60px; width:1px;
+  background: linear-gradient(180deg, transparent, var(--gold-dim), transparent);
+}
+
+.detail.open { transform:translateX(0); }
+
+.detail-close {
+  position:absolute; top:20px; right:20px;
+  width:30px; height:30px;
+  border-radius:50%;
+  border: 1px solid var(--border2);
+  background:none; color:var(--text3);
+  cursor:pointer; font-size:13px;
+  display:flex; align-items:center; justify-content:center;
+  transition: all .2s;
+}
+.detail-close:hover { border-color:var(--gold-dim); color:var(--gold); }
+
+.detail-date {
+  font-size:64px; font-weight:300;
+  font-family:'Cormorant Garamond',serif;
+  line-height:1; color:var(--text);
+}
+
+.detail-weekday {
+  font-size:10px; letter-spacing:0.28em; text-transform:uppercase;
+  color:var(--text3); font-family:'Cormorant Garamond',serif;
+  margin-top:6px;
+}
+
+/* ornament line */
+.ornament {
+  display:flex; align-items:center; gap:10px;
+}
+.ornament::before, .ornament::after {
+  content:''; flex:1; height:1px;
+  background:linear-gradient(90deg,transparent,var(--border2),transparent);
+}
+.ornament span {
+  font-size:10px; color:var(--gold-dim);
+  letter-spacing:0.2em;
+}
+
+.detail-shift-section {}
+
+.detail-shift-heading {
+  font-size:9px; letter-spacing:0.25em; text-transform:uppercase;
+  color:var(--text3); font-family:'Cormorant Garamond',serif;
+  margin-bottom:8px;
+}
+
+.detail-shift-val {
+  font-size:22px; font-weight:300; letter-spacing:0.1em;
+  font-family:'Cormorant Garamond',serif;
+}
+.detail-shift-val.day   { color:var(--day-col); }
+.detail-shift-val.night { color:var(--ngt-col); }
+.detail-shift-val.rest  { color:var(--text3); }
+.detail-shift-val.salto { color:var(--salto-col); }
+
+.detail-shift-h {
+  font-size:12px; color:var(--text3); letter-spacing:0.1em;
+  font-family:'Cormorant Garamond',serif; margin-top:3px;
+}
+
+.detail-ev-heading {
+  font-size:9px; letter-spacing:0.25em; text-transform:uppercase;
+  color:var(--text3); font-family:'Cormorant Garamond',serif;
+  margin-bottom:12px;
+}
+
+.detail-ev-card {
+  padding:14px 0;
+  border-bottom:1px solid var(--border);
+  display:flex; gap:14px; align-items:flex-start;
+}
+.detail-ev-card:last-child { border-bottom:none; }
+
+.detail-ev-bar {
+  width:1px; flex-shrink:0; align-self:stretch; min-height:30px;
+}
+.detail-ev-bar.fam { background:var(--fam); }
+.detail-ev-bar.bam { background:var(--bam); }
+.detail-ev-bar.per { background:var(--per); }
+
+.detail-ev-info {}
+.detail-ev-name {
+  font-size:16px; font-weight:400; font-style:italic;
+  font-family:'Cormorant Garamond',serif; color:var(--text);
+  line-height:1.2;
+}
+.detail-ev-meta {
+  font-size:11px; color:var(--text3); letter-spacing:0.1em;
+  font-family:'Cormorant Garamond',serif; margin-top:4px;
+}
+.detail-ev-cat {
+  font-size:9px; letter-spacing:0.18em; text-transform:uppercase;
+  margin-top:5px; color:var(--text3); font-family:'Cormorant Garamond',serif;
+}
+
+.no-ev-detail {
+  font-size:14px; color:var(--text3); font-style:italic;
+  text-align:center; padding:16px 0;
+  font-family:'Cormorant Garamond',serif;
+}
+
+@keyframes fadeRow {
+  from { opacity:0; transform:translateY(5px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.day-row { animation: fadeRow .35s ease both; }
+.day-row:nth-child(1){animation-delay:.02s}
+.day-row:nth-child(2){animation-delay:.05s}
+.day-row:nth-child(3){animation-delay:.08s}
+.day-row:nth-child(4){animation-delay:.11s}
+.day-row:nth-child(5){animation-delay:.14s}
+.day-row:nth-child(6){animation-delay:.17s}
+.day-row:nth-child(7){animation-delay:.20s}
+
+/* ── LOGIN OVERLAY ── */
+.login-overlay {
+  position: fixed; inset: 0;
+  background: var(--bg);
+  z-index: 300;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 24px;
+  transition: opacity .4s;
+}
+.login-overlay.hidden {
+  opacity: 0; pointer-events: none;
+}
+.login-overlay-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px; font-weight: 300;
+  letter-spacing: 0.12em;
+  color: var(--text2);
+}
+.login-overlay-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--text3);
+}
+.login-btn {
+  margin-top: 12px;
+  padding: 14px 36px;
+  background: none;
+  border: 1px solid var(--border2);
+  color: var(--gold);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px; letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all .25s;
+}
+.login-btn:hover {
+  background: var(--gold-dim);
+  border-color: var(--gold);
+}
+
+/* ── DAY VIEW ── */
+.week-grid.day-view .day-row {
+  min-height: 200px;
+  cursor: default;
+}
+.week-grid.day-view .events-col {
+  justify-content: flex-start;
+  padding-top: 20px;
+  gap: 10px;
+}
+.week-grid.day-view .event-title-s {
+  font-size: 15px;
+  white-space: normal;
+}
+.week-grid.day-view .day-num {
+  font-size: 48px;
+}
+.week-grid.day-view .shift-lbl {
+  font-size: 11px;
+}
+.nav-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+  pointer-events: none;
+}
+</style>
+</head>
+<body>
+
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-overlay-title">Calendario VVF</div>
+  <div class="login-overlay-sub">Squadra A · Salto 6</div>
+  <button class="login-btn" onclick="requestAuth()">Connetti Google Calendar</button>
+  <div class="login-overlay-sub" style="font-size:10px;margin-top:8px;">oppure tocca per continuare senza sync</div>
+  <button class="login-btn" onclick="hideLoginOverlay()" style="font-size:11px;padding:10px 24px;color:var(--text3);border-color:var(--border);">Continua senza Calendar</button>
+</div>
+
+<div class="header">
+  <div class="header-left">
+    <div class="month-name" id="monthName">Mag<em>gio</em></div>
+    <div class="year-line" id="yearLine">2026 · Squadra A</div>
+  </div>
+  <div class="header-right">
+    <div class="today-shift-wrap">
+      <div class="today-shift-label">Oggi</div>
+      <div class="today-shift-val rest" id="todayShiftVal">Riposo</div>
+      <div class="today-shift-hours" id="todayShiftHours">—</div>
+    </div>
+    <div class="controls">
+      <div class="view-tabs">
+        <button class="vtab active" onclick="setView('1w')">1 sett</button>
+        <button class="vtab" onclick="setView('2w')">2 sett</button>
+        <button class="vtab" onclick="setView('day')">Giorno</button>
+      </div>
+      <button class="ctrl-btn" onclick="toggleTheme()" id="themeBtn">☀</button>
+    </div>
+  </div>
+</div>
+
+<div class="week-nav">
+  <span class="week-range" id="weekRange"></span>
+  <div class="nav-arrows">
+    <button class="nav-btn" onclick="navigate(-1)">‹</button>
+    <button class="nav-btn" onclick="navigate(1)">›</button>
+  </div>
+</div>
+
+<div class="week-grid" id="weekGrid"></div>
+
+<div class="legend">
+  <span class="leg-label">Turno</span>
+  <div class="leg-group">
+    <div class="leg-item"><div class="leg-dot" style="background:var(--day-col)"></div> Giorno</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--ngt-col)"></div> Notte</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--salto-col)"></div> Salto</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--rest-col)"></div> Riposo</div>
+  </div>
+  <div class="leg-sep"></div>
+  <span class="leg-label">Calendario</span>
+  <div class="leg-group">
+    <div class="leg-item"><div class="leg-line" style="background:var(--fam)"></div> Famiglia</div>
+    <div class="leg-item"><div class="leg-line" style="background:var(--bam)"></div> Bambini</div>
+    <div class="leg-item"><div class="leg-line" style="background:var(--per)"></div> Personale</div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeDetail()"></div>
+<div class="detail" id="detailPanel">
+  <button class="detail-close" onclick="closeDetail()">✕</button>
+  <div>
+    <div class="detail-date" id="dDate"></div>
+    <div class="detail-weekday" id="dWeekday"></div>
+  </div>
+  <div class="ornament"><span>✦</span></div>
+  <div class="detail-shift-section">
+    <div class="detail-shift-heading">Turno · Squadra A</div>
+    <div class="detail-shift-val rest" id="dShiftVal">Riposo</div>
+    <div class="detail-shift-h" id="dShiftH">—</div>
+  </div>
+  <div>
+    <div class="detail-ev-heading">Appuntamenti</div>
+    <div id="dEvents"></div>
+  </div>
+</div>
+
+<script>
+// Google Identity Services — assign before GIS script fires
+// ── OAUTH REDIRECT HANDLER ───────────────────────────────
+// Runs immediately: check if returning from Google OAuth redirect
+(function() {
+  const hash = new URLSearchParams(window.location.hash.slice(1));
+  const token = hash.get('access_token');
+  if (token) {
+    try { sessionStorage.setItem('gcal_token', token); } catch(e) {}
+    // Clean the token from URL bar
+    try { history.replaceState(null, '', location.pathname); } catch(e) {}
+  }
+})();
+
+// ── CONFIG ───────────────────────────────────────────────
+const CONFIG = {
+  CLIENT_ID: '616203645471-ila696visvscl6i374jqk53dbcn93sjg.apps.googleusercontent.com',
+  SCOPES: 'https://www.googleapis.com/auth/calendar.readonly',
+  CALENDARS: {
+    famiglia:  'd75af63d3963d801b5df8c0c5720581769d5f4c3f7fb614627ad3a67bf923f4c@group.calendar.google.com',
+    bambini:   'fa5ebaf2791a9f0a9cf0ea3de05aad626abc18c9e9b7ce8a88795bde98483847@group.calendar.google.com',
+    personale: 'primary',
+  },
+  COLORS: {
+    famiglia:  '#6a9ad0',
+    bambini:   '#7ab87a',
+    personale: '#c9a84c',
+  }
+};
+
+window.CALENDAR_EVENTS = {};  // { 'YYYY-MM-DD': [{t, n, c}, ...] }
+
+let accessToken = null;
+try { accessToken = sessionStorage.getItem('gcal_token'); } catch(e) {}
+
+// ── GOOGLE AUTH ───────────────────────────────────────────
+function requestAuth() {
+  const url = new URL('https://accounts.google.com/o/oauth2/v2/auth');
+  url.searchParams.set('client_id',    CONFIG.CLIENT_ID);
+  url.searchParams.set('redirect_uri', location.origin + location.pathname);
+  url.searchParams.set('response_type','token');
+  url.searchParams.set('scope',        CONFIG.SCOPES);
+  url.searchParams.set('prompt',       'select_account');
+  location.href = url.toString();
+}
+
+function hideLoginOverlay() {
+  const el = document.getElementById('loginOverlay');
+  if (el) el.classList.add('hidden');
+}
+function showLoginOverlay() {
+  const el = document.getElementById('loginOverlay');
+  if (el) el.classList.remove('hidden');
+}
+
+// ── CALENDAR FETCH ────────────────────────────────────────
+async function fetchCalendarEvents(calendarId, timeMin, timeMax) {
+  const url = new URL(
+    `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events`
+  );
+  url.searchParams.set('timeMin',      timeMin.toISOString());
+  url.searchParams.set('timeMax',      timeMax.toISOString());
+  url.searchParams.set('singleEvents', 'true');
+  url.searchParams.set('orderBy',      'startTime');
+  url.searchParams.set('maxResults',   '50');
+
+  const res = await fetch(url.toString(), {
+    headers: { Authorization: `Bearer ${accessToken}` }
+  });
+
+  if (res.status === 401) {
+    accessToken = null;
+    try { sessionStorage.removeItem('gcal_token'); } catch(e) {}
+    showLoginOverlay();
+    return { items: [] };
+  }
+
+  return res.json();
+}
+
+async function fetchAllCalendars() {
+  if (!accessToken) return;
+
+  const timeMin = new Date();
+  timeMin.setHours(0, 0, 0, 0);
+  const timeMax = new Date(timeMin);
+  timeMax.setDate(timeMax.getDate() + 14);
+
+  const merged = {};
+
+  for (const [cat, calId] of Object.entries(CONFIG.CALENDARS)) {
+    try {
+      const data = await fetchCalendarEvents(calId, timeMin, timeMax);
+      (data.items || []).forEach(ev => {
+        const raw = ev.start.date || ev.start.dateTime;
+        const dateStr = raw.substring(0, 10); // YYYY-MM-DD
+        if (!merged[dateStr]) merged[dateStr] = [];
+        merged[dateStr].push({
+          t: ev.start.dateTime ? ev.start.dateTime.substring(11, 16) : 'tutto il giorno',
+          n: ev.summary || '(senza titolo)',
+          c: cat.substring(0, 3)
+        });
+      });
+    } catch (e) {
+      console.warn(`Errore calendario ${cat}:`, e);
+    }
+  }
+
+  // Sort each day's events by time
+  Object.keys(merged).forEach(d =>
+    merged[d].sort((a, b) => a.t.localeCompare(b.t))
+  );
+
+  window.CALENDAR_EVENTS = merged;
+  render();
+}
+
+// ── KEEP-ALIVE + FULLSCREEN ───────────────────────────────
+let keepAliveStarted = false;
+
+function initKeepAlive() {
+  if (keepAliveStarted) return;
+  keepAliveStarted = true;
+
+  // Fullscreen — nasconde la navbar di Silk
+  try {
+    const el = document.documentElement;
+    if (el.requestFullscreen)             el.requestFullscreen();
+    else if (el.webkitRequestFullscreen)  el.webkitRequestFullscreen();
+  } catch(e) {}
+
+  // Audio silenzioso in loop — impedisce a Silk di chiudere la tab
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const buf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.loop   = true;
+    src.connect(ctx.destination);
+    src.start();
+  } catch(e) {
+    console.warn('Keep-alive AudioContext failed:', e);
+  }
+}
+
+// ── TURNARIO ──────────────────────────────────────────────
+const ANCHOR   = new Date(2026,4,4); // Lun 4 mag 2026 = A5 GIORNO
+const MY_SALTO = 6;
+
+function getShift(date) {
+  const diff = Math.round((date - ANCHOR) / 86400000);
+  const c4   = ((diff % 4) + 4) % 4;          // 0=giorno 1=notte 2=3=riposo
+  const cn   = Math.floor(diff / 4);           // quanti cicli
+  const sal  = (((5 - 1 + cn) % 8) + 8) % 8 + 1;        // 1-8, parte da 5 all'anchor
+  if (c4 === 0) return { type:'day',   salto:sal };
+  if (c4 === 1) return { type:'night', salto:sal };
+  return { type:'rest', salto:null };
+}
+
+function isSalto(sh) { return sh.type !== 'rest' && sh.salto === MY_SALTO; }
+
+function shiftClass(sh) {
+  if (sh.type==='rest') return 'rest';
+  if (isSalto(sh))      return 'salto';
+  return sh.type==='day' ? 'day' : 'night';
+}
+function shiftLabel(sh) {
+  if (sh.type==='rest') return 'Riposo';
+  if (isSalto(sh))      return 'Salto';
+  return sh.type==='day' ? 'Giorno' : 'Notte';
+}
+function shiftHours(sh) {
+  if (sh.type==='rest' || isSalto(sh)) return null;
+  return sh.type==='day' ? '08:00 — 20:00' : '20:00 — 08:00';
+}
+
+// ── MOCK EVENTS ───────────────────────────────────────────
+const MOCK_EVT = {}; // populate for offline/demo use
+
+function getEvt(d) {
+  const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  return window.CALENDAR_EVENTS[key] || MOCK_EVT[key] || [];
+}
+
+function escapeHTML(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── STATE ─────────────────────────────────────────────────
+function getToday() {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+const DAYS   = ['Dom','Lun','Mar','Mer','Gio','Ven','Sab'];
+const MONTHS = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno',
+                'Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+
+let view='1w', woff=0;
+let dark;
+try { dark = localStorage.getItem('theme') !== 'light'; } catch(e) { dark = true; }
+
+function addDays(d,n){ const r=new Date(d); r.setDate(r.getDate()+n); return r; }
+function sameDay(a,b){ return a.toDateString()===b.toDateString(); }
+
+function monday(d){
+  const r=new Date(d); r.setHours(0,0,0,0);
+  const day=r.getDay();
+  r.setDate(r.getDate()+(day===0?-6:1-day));
+  return r;
+}
+
+function fmtRange(s,e){
+  const ms=MONTHS[s.getMonth()].substring(0,3);
+  const me=MONTHS[e.getMonth()].substring(0,3);
+  if(s.getMonth()===e.getMonth())
+    return `${s.getDate()} — ${e.getDate()} ${ms} ${e.getFullYear()}`;
+  return `${s.getDate()} ${ms} — ${e.getDate()} ${me} ${e.getFullYear()}`;
+}
+
+// ── RENDER ────────────────────────────────────────────────
+function renderRow(date, compact, noTruncate){
+  const sh  = getShift(date);
+  const sc  = shiftClass(sh);
+  const sl  = shiftLabel(sh);
+  const shr = shiftHours(sh);
+  const evs = getEvt(date);
+  const tod = sameDay(date,getToday());
+  const sun = date.getDay()===0;
+
+  const limit = noTruncate ? evs.length : (compact ? 2 : 3);
+  const evHTML = evs.slice(0, limit).map(e=>`
+    <div class="event-row">
+      <div class="event-line ${e.c}"></div>
+      <span class="event-time-s">${e.t}</span>
+      <span class="event-title-s">${escapeHTML(e.n)}</span>
+    </div>`).join('') || `<span class="no-ev">Nessun appuntamento</span>`;
+
+  return `<div class="day-row${tod?' today':''}${sun?' sunday':''}"
+              onclick="${noTruncate ? '' : `openDetail(${date.getTime()})`}">
+    <div class="day-num-col">
+      <div class="day-name-lbl">${DAYS[date.getDay()]}</div>
+      <div class="day-num">${date.getDate()}</div>
+    </div>
+    <div class="shift-col">
+      <div class="shift-mark ${sc}"></div>
+      <div class="shift-lbl ${sc}">${sl}</div>
+      ${shr?`<div class="shift-time-lbl">${shr}</div>`:''}
+    </div>
+    <div class="events-col">${evHTML}</div>
+  </div>`;
+}
+
+function render(){
+  const base = monday(addDays(getToday(), woff*7));
+  const days = view==='2w' ? 14 : view==='day' ? 1 : 7;
+  const grid = document.getElementById('weekGrid');
+
+  grid.classList.toggle('two-week', view==='2w');
+  grid.classList.toggle('day-view', view==='day');
+
+  // Nav arrows: disable in day view
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.disabled = (view==='day');
+  });
+
+  let html='';
+  if (view === 'day') {
+    html = renderRow(getToday(), false, true);
+  } else {
+    for(let i=0;i<days;i++){
+      if(i===7) html+=`<div class="week-divider"><span>Settimana successiva</span></div>`;
+      html+=renderRow(addDays(base,i), view==='2w', false);
+    }
+  }
+  grid.innerHTML=html;
+
+  document.getElementById('weekRange').textContent =
+    view==='day'
+      ? `${DAYS[getToday().getDay()]} ${getToday().getDate()} ${MONTHS[getToday().getMonth()]} ${getToday().getFullYear()}`
+      : fmtRange(base, addDays(base, days-1));
+
+  // Header month
+  const refDate = view==='day' ? getToday() : base;
+  const mn = MONTHS[refDate.getMonth()];
+  document.getElementById('monthName').innerHTML =
+    mn.substring(0,3)+'<em>'+mn.substring(3)+'</em>';
+  document.getElementById('yearLine').textContent =
+    `${refDate.getFullYear()} · Squadra A`;
+
+  // Today shift in header
+  const ts  = getShift(getToday());
+  const tsc = shiftClass(ts);
+  const tv  = document.getElementById('todayShiftVal');
+  tv.className=`today-shift-val ${tsc}`;
+  tv.textContent=shiftLabel(ts);
+  document.getElementById('todayShiftHours').textContent=shiftHours(ts)||'—';
+  fillHeight();
+}
+
+// ── FILL HEIGHT ───────────────────────────────────────────
+function fillHeight() {
+  const rows     = document.querySelectorAll('.day-row');
+  if (!rows.length) return;
+  const header   = document.querySelector('.header');
+  const weekNav  = document.querySelector('.week-nav');
+  const legend   = document.querySelector('.legend');
+  const dividers = document.querySelectorAll('.week-divider');
+
+  const used =
+    (header  ? header.offsetHeight  : 0) +
+    (weekNav ? weekNav.offsetHeight : 0) +
+    (legend  ? legend.offsetHeight  : 0) +
+    Array.from(dividers).reduce((s, d) => s + d.offsetHeight, 0);
+
+  const rowH = Math.max(60, Math.floor((window.innerHeight - used) / rows.length));
+  rows.forEach(r => { r.style.height = rowH + 'px'; });
+}
+
+// ── DETAIL ────────────────────────────────────────────────
+function openDetail(ts){
+  const d=new Date(ts);
+  const sh=getShift(d);
+  const sc=shiftClass(sh);
+  const evs=getEvt(d);
+
+  document.getElementById('dDate').textContent=d.getDate();
+  document.getElementById('dWeekday').textContent=
+    `${DAYS[d.getDay()].toUpperCase()} · ${MONTHS[d.getMonth()].toUpperCase()} ${d.getFullYear()}`;
+
+  const sv=document.getElementById('dShiftVal');
+  sv.className=`detail-shift-val ${sc}`;
+  sv.textContent=shiftLabel(sh);
+  document.getElementById('dShiftH').textContent=shiftHours(sh)||'—';
+
+  const de=document.getElementById('dEvents');
+  de.innerHTML = evs.length ? evs.map(e=>`
+    <div class="detail-ev-card">
+      <div class="detail-ev-bar ${e.c}"></div>
+      <div class="detail-ev-info">
+        <div class="detail-ev-name">${escapeHTML(e.n)}</div>
+        <div class="detail-ev-meta">${e.t}</div>
+        <div class="detail-ev-cat">${e.c==='fam'?'Famiglia':e.c==='bam'?'Bambini':'Personale'}</div>
+      </div>
+    </div>`).join('')
+    : `<div class="no-ev-detail">Nessun appuntamento</div>`;
+
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('detailPanel').classList.add('open');
+}
+
+function closeDetail(){
+  document.getElementById('overlay').classList.remove('open');
+  document.getElementById('detailPanel').classList.remove('open');
+}
+
+// ── CONTROLS ──────────────────────────────────────────────
+function setView(v){
+  view=v; woff=0;
+  document.querySelectorAll('.vtab').forEach((t,i)=>{
+    t.classList.toggle('active',['1w','2w','day'][i]===v);
+  });
+  render();
+}
+
+function navigate(d){ woff+=d; render(); }
+
+function applyTheme(){
+  document.body.classList.toggle('light',!dark);
+  document.getElementById('themeBtn').textContent=dark?'☀':'☾';
+}
+
+function toggleTheme(){
+  dark=!dark;
+  localStorage.setItem('theme', dark ? 'dark' : 'light');
+  applyTheme();
+}
+
+// ── INIT ─────────────────────────────────────────────────
+applyTheme();
+if (accessToken) {
+  hideLoginOverlay();
+  fetchAllCalendars();
+} else {
+  showLoginOverlay();
+}
+render();
+// Auto-refresh Google Calendar every 15 minutes
+setInterval(() => {
+  if (accessToken) fetchAllCalendars();
+}, 15 * 60 * 1000);
+
+// Keep-alive for Echo Show 15 Silk browser
+document.addEventListener('touchstart', initKeepAlive, { once: true });
+document.addEventListener('click',      initKeepAlive, { once: true });
+
+window.addEventListener('resize', fillHeight);
+</script>
+</body>
+</html>
