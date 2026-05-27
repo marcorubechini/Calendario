@@ -680,9 +680,13 @@ body::after {
 
 <div class="week-nav">
   <span class="week-range" id="weekRange"></span>
-  <div class="nav-arrows">
-    <button class="nav-btn" onclick="navigate(-1)">‹</button>
-    <button class="nav-btn" onclick="navigate(1)">›</button>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <span id="syncStatus" style="font-size:16px;color:var(--text3);font-family:'Cormorant Garamond',serif;font-style:italic;"></span>
+    <button class="nav-btn" onclick="manualSync()" id="syncBtn" title="Sincronizza Google Calendar" style="width:52px;height:52px;font-size:20px;">↻</button>
+    <div class="nav-arrows">
+      <button class="nav-btn" onclick="navigate(-1)">‹</button>
+      <button class="nav-btn" onclick="navigate(1)">›</button>
+    </div>
   </div>
 </div>
 
@@ -804,8 +808,15 @@ async function fetchCalendarEvents(calendarId, timeMin, timeMax) {
   return res.json();
 }
 
+function setSyncStatus(msg) {
+  const el = document.getElementById('syncStatus');
+  if (el) el.textContent = msg;
+}
+
 async function fetchAllCalendars() {
   if (!accessToken) return;
+
+  setSyncStatus('↻ sync…');
 
   const timeMin = new Date();
   timeMin.setHours(0, 0, 0, 0);
@@ -813,32 +824,43 @@ async function fetchAllCalendars() {
   timeMax.setDate(timeMax.getDate() + 14);
 
   const merged = {};
+  let totalEvents = 0;
 
   for (const [cat, calId] of Object.entries(CONFIG.CALENDARS)) {
     try {
       const data = await fetchCalendarEvents(calId, timeMin, timeMax);
       (data.items || []).forEach(ev => {
         const raw = ev.start.date || ev.start.dateTime;
-        const dateStr = raw.substring(0, 10); // YYYY-MM-DD
+        const dateStr = raw.substring(0, 10);
         if (!merged[dateStr]) merged[dateStr] = [];
         merged[dateStr].push({
           t: ev.start.dateTime ? ev.start.dateTime.substring(11, 16) : 'tutto il giorno',
           n: ev.summary || '(senza titolo)',
           c: cat.substring(0, 3)
         });
+        totalEvents++;
       });
     } catch (e) {
       console.warn(`Errore calendario ${cat}:`, e);
     }
   }
 
-  // Sort each day's events by time
   Object.keys(merged).forEach(d =>
     merged[d].sort((a, b) => a.t.localeCompare(b.t))
   );
 
   window.CALENDAR_EVENTS = merged;
   render();
+
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mm = String(now.getMinutes()).padStart(2,'0');
+  setSyncStatus(`${totalEvents} eventi · ${hh}:${mm}`);
+}
+
+async function manualSync() {
+  if (!accessToken) { showLoginOverlay(); return; }
+  await fetchAllCalendars();
 }
 
 // ── KEEP-ALIVE + FULLSCREEN ───────────────────────────────
