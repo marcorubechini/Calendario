@@ -442,49 +442,49 @@ body::after {
 .overlay.open { opacity:1; pointer-events:all; }
 
 .detail {
-  position:fixed; right:0; top:0; bottom:0;
-  width:620px;
+  position:fixed; left:0; right:0; top:0; bottom:0;
+  width:100%;
   background: var(--bg2);
-  border-left: 1px solid var(--border2);
-  padding: 56px 52px 48px;
-  transform: translateX(100%);
+  border:none;
+  padding: 70px 80px 60px;
+  transform: translateY(100%);
   transition: transform .4s cubic-bezier(.4,0,.2,1);
   z-index:201;
   overflow-y:auto;
-  display:flex; flex-direction:column; gap:32px;
+  display:flex; flex-direction:column; gap:40px;
 }
 
-/* gold rule left edge detail */
+/* gold rule top edge */
 .detail::before {
   content:'';
-  position:absolute; left:0; top:60px; bottom:60px; width:1px;
-  background: linear-gradient(180deg, transparent, var(--gold-dim), transparent);
+  position:absolute; top:0; left:80px; right:80px; height:1px;
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
 }
 
-.detail.open { transform:translateX(0); }
+.detail.open { transform:translateY(0); }
 
 .detail-close {
-  position:absolute; top:24px; right:24px;
-  width:56px; height:56px;
+  position:absolute; top:28px; right:36px;
+  width:72px; height:72px;
   border-radius:50%;
   border: 1px solid var(--border2);
   background:none; color:var(--text3);
-  cursor:pointer; font-size:24px;
+  cursor:pointer; font-size:32px;
   display:flex; align-items:center; justify-content:center;
   transition: all .2s;
 }
 .detail-close:hover { border-color:var(--gold-dim); color:var(--gold); }
 
 .detail-date {
-  font-size:110px; font-weight:300;
+  font-size:160px; font-weight:300;
   font-family:'Cormorant Garamond',serif;
   line-height:1; color:var(--text);
 }
 
 .detail-weekday {
-  font-size:22px; letter-spacing:0.28em; text-transform:uppercase;
+  font-size:32px; letter-spacing:0.28em; text-transform:uppercase;
   color:var(--text3); font-family:'Cormorant Garamond',serif;
-  margin-top:8px;
+  margin-top:10px;
 }
 
 /* ornament line */
@@ -503,13 +503,13 @@ body::after {
 .detail-shift-section {}
 
 .detail-shift-heading {
-  font-size:18px; letter-spacing:0.25em; text-transform:uppercase;
+  font-size:26px; letter-spacing:0.25em; text-transform:uppercase;
   color:var(--text3); font-family:'Cormorant Garamond',serif;
-  margin-bottom:10px;
+  margin-bottom:12px;
 }
 
 .detail-shift-val {
-  font-size:44px; font-weight:300; letter-spacing:0.1em;
+  font-size:64px; font-weight:300; letter-spacing:0.1em;
   font-family:'Cormorant Garamond',serif;
 }
 .detail-shift-val.day   { color:var(--day-col); }
@@ -518,14 +518,14 @@ body::after {
 .detail-shift-val.salto { color:var(--salto-col); }
 
 .detail-shift-h {
-  font-size:22px; color:var(--text3); letter-spacing:0.1em;
-  font-family:'Cormorant Garamond',serif; margin-top:6px;
+  font-size:30px; color:var(--text3); letter-spacing:0.1em;
+  font-family:'Cormorant Garamond',serif; margin-top:8px;
 }
 
 .detail-ev-heading {
-  font-size:18px; letter-spacing:0.25em; text-transform:uppercase;
+  font-size:26px; letter-spacing:0.25em; text-transform:uppercase;
   color:var(--text3); font-family:'Cormorant Garamond',serif;
-  margin-bottom:16px;
+  margin-bottom:20px;
 }
 
 .detail-ev-card {
@@ -544,22 +544,22 @@ body::after {
 
 .detail-ev-info {}
 .detail-ev-name {
-  font-size:34px; font-weight:400; font-style:italic;
+  font-size:48px; font-weight:400; font-style:italic;
   font-family:'Cormorant Garamond',serif; color:var(--text);
   line-height:1.2;
 }
 .detail-ev-meta {
-  font-size:22px; color:var(--text3); letter-spacing:0.1em;
-  font-family:'Cormorant Garamond',serif; margin-top:6px;
+  font-size:30px; color:var(--text3); letter-spacing:0.1em;
+  font-family:'Cormorant Garamond',serif; margin-top:8px;
 }
 .detail-ev-cat {
-  font-size:18px; letter-spacing:0.18em; text-transform:uppercase;
-  margin-top:6px; color:var(--text3); font-family:'Cormorant Garamond',serif;
+  font-size:22px; letter-spacing:0.18em; text-transform:uppercase;
+  margin-top:8px; color:var(--text3); font-family:'Cormorant Garamond',serif;
 }
 
 .no-ev-detail {
-  font-size:28px; color:var(--text3); font-style:italic;
-  text-align:center; padding:20px 0;
+  font-size:38px; color:var(--text3); font-style:italic;
+  text-align:center; padding:24px 0;
   font-family:'Cormorant Garamond',serif;
 }
 
@@ -712,19 +712,20 @@ body::after {
 <div class="overlay" id="overlay" onclick="closeDetail()"></div>
 <div class="detail" id="detailPanel">
   <button class="detail-close" onclick="closeDetail()">✕</button>
-  <div>
-    <div class="detail-date" id="dDate"></div>
-    <div class="detail-weekday" id="dWeekday"></div>
-  </div>
-  <div class="ornament"><span>✦</span></div>
-  <div class="detail-shift-section">
-    <div class="detail-shift-heading">Turno</div>
-    <div class="detail-shift-val rest" id="dShiftVal">Riposo</div>
-    <div class="detail-shift-h" id="dShiftH">—</div>
-  </div>
-  <div>
-    <div class="detail-ev-heading">Appuntamenti</div>
-    <div id="dEvents"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;">
+    <div>
+      <div class="detail-date" id="dDate"></div>
+      <div class="detail-weekday" id="dWeekday"></div>
+      <div style="margin-top:40px;">
+        <div class="detail-shift-heading">Turno</div>
+        <div class="detail-shift-val rest" id="dShiftVal">Riposo</div>
+        <div class="detail-shift-h" id="dShiftH">—</div>
+      </div>
+    </div>
+    <div>
+      <div class="detail-ev-heading">Appuntamenti</div>
+      <div id="dEvents"></div>
+    </div>
   </div>
 </div>
 
