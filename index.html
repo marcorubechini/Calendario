@@ -84,7 +84,7 @@ body::after {
 .header {
   position: relative;
   z-index:1;
-  padding: 40px 48px 28px;
+  padding: 28px 48px 20px;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -96,7 +96,7 @@ body::after {
 
 .month-name {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 52px;
+  font-size: 72px;
   font-weight: 300;
   letter-spacing: 0.08em;
   line-height: 1;
@@ -109,7 +109,7 @@ body::after {
 }
 
 .year-line {
-  font-size: 18px;
+  font-size: 28px;
   letter-spacing: 0.28em;
   color: var(--text3);
   margin-top: 6px;
@@ -131,7 +131,7 @@ body::after {
 }
 
 .today-shift-label {
-  font-size: 14px;
+  font-size: 20px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--text3);
@@ -139,7 +139,7 @@ body::after {
 }
 
 .today-shift-val {
-  font-size: 22px;
+  font-size: 36px;
   font-weight: 400;
   letter-spacing: 0.12em;
   margin-top: 2px;
@@ -150,7 +150,7 @@ body::after {
 .today-shift-val.salto { color: var(--salto-col); }
 
 .today-shift-hours {
-  font-size: 15px;
+  font-size: 22px;
   color: var(--text3);
   letter-spacing: 0.1em;
   font-family: 'Cormorant Garamond', serif;
@@ -163,10 +163,10 @@ body::after {
   background: none;
   border: 1px solid var(--border2);
   color: var(--text2);
-  width: 34px; height: 34px;
+  width: 52px; height: 52px;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 22px;
   display:flex; align-items:center; justify-content:center;
   transition: all .25s;
   font-family: inherit;
@@ -182,7 +182,7 @@ body::after {
 }
 .vtab {
   padding: 6px 16px;
-  font-size: 15px;
+  font-size: 19px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--text3);
@@ -200,12 +200,12 @@ body::after {
 .week-nav {
   position:relative; z-index:1;
   display:flex; align-items:center; justify-content:space-between;
-  padding: 14px 48px 10px;
+  padding: 10px 48px 8px;
   flex-shrink: 0;
 }
 
 .week-range {
-  font-size: 17px;
+  font-size: 26px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--text3);
@@ -217,10 +217,10 @@ body::after {
   background:none;
   border: 1px solid var(--border);
   color: var(--text3);
-  width:28px; height:28px;
+  width:52px; height:52px;
   border-radius:50%;
   cursor:pointer;
-  font-size:13px;
+  font-size:24px;
   display:flex; align-items:center; justify-content:center;
   transition: all .2s;
   font-family:inherit;
@@ -238,7 +238,7 @@ body::after {
 /* gold ornament between rows */
 .day-row {
   display: grid;
-  grid-template-columns: 80px 110px 1fr;
+  grid-template-columns: 120px 170px 1fr;
   border-bottom: 1px solid var(--border);
   cursor: pointer;
   transition: background .2s;
@@ -272,7 +272,7 @@ body::after {
 }
 
 .day-name-lbl {
-  font-size: 16px;
+  font-size: 28px;
   letter-spacing: 0.25em;
   text-transform: uppercase;
   color: var(--text3);
@@ -280,7 +280,7 @@ body::after {
 }
 
 .day-num {
-  font-size: 56px;
+  font-size: 88px;
   font-weight: 300;
   font-family: 'Cormorant Garamond', serif;
   line-height: 1;
@@ -311,8 +311,8 @@ body::after {
 .shift-mark.salto { background: var(--salto-col); box-shadow: 0 0 6px var(--salto-col); }
 
 .shift-lbl {
-  font-size: 16px;
-  letter-spacing: 0.22em;
+  font-size: 24px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   font-family: 'Cormorant Garamond', serif;
 }
@@ -322,7 +322,7 @@ body::after {
 .shift-lbl.salto { color: var(--salto-col); }
 
 .shift-time-lbl {
-  font-size: 14px;
+  font-size: 20px;
   color: var(--text3);
   letter-spacing: 0.1em;
   font-family: 'Cormorant Garamond', serif;
@@ -350,16 +350,16 @@ body::after {
 .event-line.per  { background: var(--per); }
 
 .event-time-s {
-  font-size: 15px;
+  font-size: 26px;
   color: var(--text3);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.05em;
   font-family: 'Cormorant Garamond', serif;
-  width: 48px;
+  width: 72px;
   flex-shrink:0;
 }
 
 .event-title-s {
-  font-size: 20px;
+  font-size: 36px;
   font-weight: 400;
   color: var(--text2);
   font-family: 'Cormorant Garamond', serif;
@@ -368,7 +368,7 @@ body::after {
 }
 
 .no-ev {
-  font-size: 17px;
+  font-size: 28px;
   color: var(--text3);
   font-family: 'Cormorant Garamond', serif;
   font-style: italic;
@@ -395,17 +395,17 @@ body::after {
 }
 
 /* compact 2w */
-.week-grid.two-week .day-num { font-size:40px; }
-.week-grid.two-week .day-name-lbl { font-size:13px; }
-.week-grid.two-week .shift-lbl { font-size:13px; }
-.week-grid.two-week .event-title-s { font-size:17px; }
-.week-grid.two-week .event-time-s { font-size:13px; }
+.week-grid.two-week .day-num { font-size:58px; }
+.week-grid.two-week .day-name-lbl { font-size:18px; }
+.week-grid.two-week .shift-lbl { font-size:17px; }
+.week-grid.two-week .event-title-s { font-size:24px; }
+.week-grid.two-week .event-time-s { font-size:18px; }
 
 /* ── LEGEND ── */
 .legend {
   position:relative; z-index:1;
   display:flex; align-items:center; gap:24px;
-  padding: 16px 48px 20px;
+  padding: 12px 48px 14px;
   border-top: 1px solid var(--border);
   flex-wrap:wrap;
   flex-shrink: 0;
@@ -416,19 +416,19 @@ body::after {
 .leg-group { display:flex; align-items:center; gap:16px; }
 
 .leg-label {
-  font-size:14px; letter-spacing:0.25em; text-transform:uppercase;
+  font-size:20px; letter-spacing:0.2em; text-transform:uppercase;
   color:var(--text3); font-family:'Cormorant Garamond', serif;
 }
 
 .leg-item {
-  display:flex; align-items:center; gap:8px;
-  font-size:16px; color:var(--text2);
+  display:flex; align-items:center; gap:10px;
+  font-size:22px; color:var(--text2);
   font-family:'Cormorant Garamond', serif;
   letter-spacing:0.05em;
 }
 
-.leg-dot { width:8px; height:8px; border-radius:50%; }
-.leg-line { width:22px; height:2px; }
+.leg-dot { width:10px; height:10px; border-radius:50%; }
+.leg-line { width:26px; height:2px; }
 
 /* ── DETAIL PANEL ── */
 .overlay {
