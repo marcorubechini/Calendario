@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=1080, initial-scale=1.0">
 <title>Calendario</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Cormorant:wght@300;400&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 
@@ -715,13 +714,17 @@ body::after {
 
 <script>
 // Google Identity Services — assign before GIS script fires
-window.onGoogleLibraryLoad = function() {
-  initGoogleAuth();
-  if (accessToken) {
-    hideLoginOverlay();
-    fetchAllCalendars();
+// ── OAUTH REDIRECT HANDLER ───────────────────────────────
+// Runs immediately: check if returning from Google OAuth redirect
+(function() {
+  const hash = new URLSearchParams(window.location.hash.slice(1));
+  const token = hash.get('access_token');
+  if (token) {
+    try { sessionStorage.setItem('gcal_token', token); } catch(e) {}
+    // Clean the token from URL bar
+    try { history.replaceState(null, '', location.pathname); } catch(e) {}
   }
-};
+})();
 
 // ── CONFIG ───────────────────────────────────────────────
 const CONFIG = {
@@ -741,48 +744,18 @@ const CONFIG = {
 
 window.CALENDAR_EVENTS = {};  // { 'YYYY-MM-DD': [{t, n, c}, ...] }
 
-let tokenClient = null;
 let accessToken = null;
 try { accessToken = sessionStorage.getItem('gcal_token'); } catch(e) {}
 
 // ── GOOGLE AUTH ───────────────────────────────────────────
-function initGoogleAuth() {
-  if (typeof google === 'undefined' || !google.accounts) return;
-  tokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: CONFIG.CLIENT_ID,
-    scope: CONFIG.SCOPES,
-    callback: (resp) => {
-      if (resp.error) { console.error('Auth error:', resp.error); return; }
-      accessToken = resp.access_token;
-      try { sessionStorage.setItem('gcal_token', accessToken); } catch(e) {}
-      hideLoginOverlay();
-      fetchAllCalendars();
-    },
-    error_callback: (err) => {
-      console.error('GIS error:', err);
-      if (err.type === 'popup_failed_to_open' || err.type === 'popup_closed') {
-        showPopupHelp();
-      }
-    }
-  });
-}
-
 function requestAuth() {
-  if (!tokenClient) initGoogleAuth();
-  if (!tokenClient) { console.warn('Google library not ready'); return; }
-  tokenClient.requestAccessToken({ prompt: 'select_account' });
-}
-
-function showPopupHelp() {
-  const el = document.getElementById('loginOverlay');
-  if (!el) return;
-  const existing = el.querySelector('.popup-help');
-  if (existing) return;
-  const msg = document.createElement('div');
-  msg.className = 'popup-help login-overlay-sub';
-  msg.style.cssText = 'color:#c9854c;font-size:12px;text-align:center;max-width:380px;line-height:1.6;margin-top:8px;';
-  msg.textContent = 'Popup bloccato. In Silk: menu ≡ → Impostazioni → Blocco popup → disabilita per questo sito. Poi riprova.';
-  el.appendChild(msg);
+  const url = new URL('https://accounts.google.com/o/oauth2/v2/auth');
+  url.searchParams.set('client_id',    CONFIG.CLIENT_ID);
+  url.searchParams.set('redirect_uri', location.origin + location.pathname);
+  url.searchParams.set('response_type','token');
+  url.searchParams.set('scope',        CONFIG.SCOPES);
+  url.searchParams.set('prompt',       'select_account');
+  location.href = url.toString();
 }
 
 function hideLoginOverlay() {
@@ -1091,7 +1064,12 @@ function toggleTheme(){
 
 // ── INIT ─────────────────────────────────────────────────
 applyTheme();
-if (!accessToken) showLoginOverlay();
+if (accessToken) {
+  hideLoginOverlay();
+  fetchAllCalendars();
+} else {
+  showLoginOverlay();
+}
 render();
 // Auto-refresh Google Calendar every 15 minutes
 setInterval(() => {
