@@ -346,11 +346,25 @@ body::after {
 .event-line {
   width: 28px; height: 2px;
   flex-shrink:0;
+  position: relative;
+  overflow: hidden;
 }
 .event-line.fam  { background: var(--fam); }
 .event-line.bam  { background: var(--bam); }
 .event-line.per  { background: var(--per); }
 .event-line.con  { background: var(--con); }
+.event-line::after {
+  content:'';
+  position:absolute; inset:0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.8) 50%, transparent 100%);
+  transform: translateX(-100%);
+  animation: shimmer-h 2.5s ease-in-out infinite;
+}
+
+@keyframes shimmer-h {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}
 
 .event-time-s {
   font-size: 26px;
@@ -540,11 +554,25 @@ body::after {
 
 .detail-ev-bar {
   width:3px; flex-shrink:0; align-self:stretch; min-height:40px;
+  position: relative;
+  overflow: hidden;
 }
 .detail-ev-bar.fam { background:var(--fam); }
 .detail-ev-bar.bam { background:var(--bam); }
 .detail-ev-bar.per { background:var(--per); }
 .detail-ev-bar.con { background:var(--con); }
+.detail-ev-bar::after {
+  content:'';
+  position:absolute; inset:0;
+  background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.85) 50%, transparent 100%);
+  transform: translateY(-100%);
+  animation: shimmer-v 2.5s ease-in-out infinite;
+}
+
+@keyframes shimmer-v {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(250%); }
+}
 
 .detail-ev-info {}
 .detail-ev-name {
