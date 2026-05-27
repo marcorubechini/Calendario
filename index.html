@@ -10,7 +10,7 @@
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 
-html { overflow-x: hidden; background: #0e1420; }
+html { overflow-x: hidden; background: #0e1420; height: 100%; }
 
 :root {
   --bg:       #0e1420;
@@ -55,8 +55,11 @@ body {
   background: var(--bg);
   color: var(--text);
   width: 1080px;
-  min-height: 100vh;
+  height: 100vh;
   overflow-x: hidden;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
   transition: background .5s, color .5s;
   position: relative;
 }
@@ -89,6 +92,7 @@ body::after {
   justify-content: space-between;
   align-items: flex-end;
   border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
 }
 
 .header-left {}
@@ -200,6 +204,7 @@ body::after {
   position:relative; z-index:1;
   display:flex; align-items:center; justify-content:space-between;
   padding: 14px 48px 10px;
+  flex-shrink: 0;
 }
 
 .week-range {
@@ -228,9 +233,11 @@ body::after {
 /* ── GRID ── */
 .week-grid {
   position:relative; z-index:1;
-  padding: 0 40px 32px;
+  padding: 0 40px;
   display:flex;
   flex-direction:column;
+  flex: 1;
+  min-height: 0;
 }
 
 /* gold ornament between rows */
@@ -240,7 +247,8 @@ body::after {
   border-bottom: 1px solid var(--border);
   cursor: pointer;
   transition: background .2s;
-  min-height: 80px;
+  flex: 1;
+  min-height: 0;
   position:relative;
 }
 
@@ -376,6 +384,7 @@ body::after {
 /* week 2 divider */
 .week-divider {
   height: 28px;
+  flex-shrink: 0;
   display:flex; align-items:center;
   gap:14px;
   padding: 0 2px;
@@ -392,7 +401,7 @@ body::after {
 }
 
 /* compact 2w */
-.week-grid.two-week .day-row { min-height:62px; }
+.week-grid.two-week .day-row { flex: 1; min-height: 0; }
 .week-grid.two-week .day-num { font-size:26px; }
 .week-grid.two-week .event-title-s { font-size:12px; }
 
@@ -400,9 +409,10 @@ body::after {
 .legend {
   position:relative; z-index:1;
   display:flex; align-items:center; gap:24px;
-  padding: 16px 48px 24px;
+  padding: 16px 48px 20px;
   border-top: 1px solid var(--border);
   flex-wrap:wrap;
+  flex-shrink: 0;
 }
 
 .leg-sep { width:1px; height:12px; background:var(--border2); }
