@@ -55,11 +55,10 @@ body {
   background: var(--bg);
   color: var(--text);
   width: 1080px;
-  min-height: 1920px;
+  min-height: 100vh;
   overflow-x: hidden;
   transition: background .5s, color .5s;
   position: relative;
-  transform-origin: top left;
 }
 
 /* grain overlay */
@@ -1077,30 +1076,6 @@ function toggleTheme(){
 }
 
 // ── INIT ─────────────────────────────────────────────────
-function scaleLayout() {
-  const s = window.innerWidth / 1080;
-  document.body.style.transform = `scale(${s})`;
-  document.body.style.height = (window.innerHeight / s) + 'px';
-  document.body.style.minHeight = (window.innerHeight / s) + 'px';
-}
-scaleLayout();
-window.addEventListener('resize', scaleLayout);
-
-// DEBUG — rimuovere dopo diagnosi
-(function() {
-  const d = document.createElement('div');
-  d.style.cssText = 'position:fixed;top:0;left:0;z-index:9999;background:rgba(0,0,0,0.85);color:#e8c97a;font-family:monospace;font-size:28px;padding:20px 30px;line-height:1.8;pointer-events:none;';
-  d.id = 'dbg';
-  d.innerHTML = [
-    'innerWidth: '  + window.innerWidth,
-    'innerHeight: ' + window.innerHeight,
-    'screen.width: '+ window.screen.width,
-    'DPR: '         + window.devicePixelRatio,
-    'scale: '       + (window.innerWidth/1080).toFixed(3),
-  ].join('<br>');
-  document.body.appendChild(d);
-})();
-
 applyTheme();
 if (accessToken) {
   hideLoginOverlay();
